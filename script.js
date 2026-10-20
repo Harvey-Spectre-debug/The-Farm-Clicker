@@ -8,6 +8,9 @@ function update() {
   document.getElementById("coins").textContent = coins;
   document.getElementById("crops").textContent = crops;
   document.getElementById("crops2").textContent=crops2;
+  document.getElementById("buy").disabled = coins < 10;
+  document.getElementById("buy2").disabled = coins < 50;
+  document.getElementById("upgrade").disabled = coins < upgradeCost;
 }
 
 document.getElementById("farm").onclick = () => { coins += clickPower; update(); };
@@ -29,3 +32,4 @@ document.getElementById("upgrade").onclick = () => {
 };
 
 setInterval(() => { coins += crops + crops2 * 5; update(); }, 1000);
+update();
