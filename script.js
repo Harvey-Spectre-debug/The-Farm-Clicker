@@ -18,6 +18,7 @@ function update() {
   pb.textContent = unlockedPlots >= TOTAL_PLOTS ? "All plots unlocked" : "Unlock plot (cost " + plotCost + ")";
   pb.disabled = coins < plotCost || unlockedPlots >= TOTAL_PLOTS; 
   drawPlots();
+  save();
 }
 function drawPlots() {
   const box = document.getElementById("plots");
@@ -62,6 +63,25 @@ document.getElementById("plotbtn").onclick = () => {
     plotCost *= 2;
 
   }
-};
-setInterval(() => { coins += crops + crops2 * 5; update(); }, 1000);
+}
+function save() {
+  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost};
+  localStorage.setItem("farmSave", JSON.stringify(data));
+}
+
+function load() {
+  const saved = localStorage.getItem("farmSave");
+  if (!saved) return;
+  const data = JSON.parse(saved);  
+  coins = data.coins || 0;
+  crops = data.crops || 0;
+  crops2 = data.crops2 || 0;
+  clickPower = data.clickPower || 1;
+  upgradeCost = data.upgradeCost || 25;
+  unlockedPlots = data.unlockedPlots || 4;
+    plotCost = data.plotCost || 100;
+  document.getElementById("upgrade").textContent = "Upgrade click (cost " + upgradeCost + ")"; 
+}
+setInterval(() => { coins += crops + crops2 * 5; update(); save(); }, 1000);
+load();
 update();
