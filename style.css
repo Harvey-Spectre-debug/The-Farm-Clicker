@@ -86,3 +86,6 @@ button:disabled { opacity: 0.5; cursor : not-allowed; }
   align-items: center;
   gap: 12px;
 }
+#decor { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; font-size: 32px; min-height: 40px; }
+#shop { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 520px; }
+#shop button { background: #6d4c41; font-size: 15px; padding: 8px 12px; }

@@ -6,6 +6,14 @@ let upgradeCost = 25;
 const TOTAL_PLOTS = 9;
 let unlockedPlots =4;
 let plotCost = 100;
+const decorItems = [
+  { emoji: "🌳", name: "Oak tree", cost: 150, bonus: 0.05 },
+  { emoji: "🏠", name: "Cottage", cost: 400, bonus: 0.10 },
+  { emoji: "⛲", name: "Fountain", cost: 900, bonus: 0.15 },
+  { emoji: "🌬️", name: "Windmill", cost: 2000, bonus: 0.25 },
+  { emoji: "🏰", name: "Castle", cost: 6000, bonus: 0.50 }
+];
+let owned = [];
 function update() {
   document.getElementById("coins").textContent = coins;
   document.getElementById("crops").textContent = crops;
@@ -48,7 +56,7 @@ document.getElementById("buy2").onclick = () =>{
    if (coins >= 50 && crops + crops2 < unlockedPlots) { coins -=50; crops2++; update(); }
   };
 document.getElementById("upgrade").onclick = () => {
-  if (coins >= upgradeCost) {
+  if (coins >= upgradeCost) {   
     coins -= upgradeCost;
     clickPower++;
     upgradeCost = Math.floor(upgradeCost * 1.5);
