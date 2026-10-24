@@ -25,6 +25,7 @@ function update() {
   const pb = document.getElementById("plotbtn");
   pb.textContent = unlockedPlots >= TOTAL_PLOTS ? "All plots unlocked" : "Unlock plot (cost " + plotCost + ")";
   pb.disabled = coins < plotCost || unlockedPlots >= TOTAL_PLOTS; 
+  drawDecor();
   drawPlots();
   save();
 }
@@ -46,6 +47,46 @@ function drawPlots() {
   }
 
 }
+function getBonus() {
+  let total = 1;
+  owned.forEach(i => { total += decorItems[i].bonus; });
+  return total;
+}
+
+function getRank() {
+  if (owned.length >= 5) return "Dream Island";
+  if (owned.length >=3) return "lively Island";
+  if (owned.lenth >= 1) return "Cozy Island";
+  return "Bare Patch"
+}
+
+function buildShop() {
+  const shop = document.getElementById("shop");
+  decorItems.forEach((item, i) => {
+    const btn = document.createElement("button");
+    btn.id = "shop" + i;
+    btn.onclick = () => {
+      if (coins >= item.cost && !owned.includes(i)) {
+        coins -= item.cost;
+        owned.push(i);
+        update();
+      }
+    };
+    shop.appendChild(btn);
+  });
+}
+
+function drawDecor() {
+  decorItems.forEach((item, i) => {
+    const btn = document.getElementById("shop" + i);
+    const has = owned.includes(i);
+    btn.textContent = has ? item.emoji + "Owned" : item.emoji + " " + item.name + " (" + item.cost + ")";
+    btn.disabled = has || coins < item.cost;
+  });
+  document.getElementById("decor").textContent = owned.map(i => decorItems[i].emoji).join(" ");
+  document.getElementById("rank").textContent = getRank();
+  document.getElementById("bonus").textContent = Math.round((getBonus() - 1) * 100);
+  }
 
 document.getElementById("farm").onclick = () => { coins += clickPower; update(); };
 
@@ -73,7 +114,7 @@ document.getElementById("plotbtn").onclick = () => {
   }
 }
 function save() {
-  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost};
+  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost,owned };
   localStorage.setItem("farmSave", JSON.stringify(data));
 }
 
@@ -88,8 +129,11 @@ function load() {
   upgradeCost = data.upgradeCost || 25;
   unlockedPlots = data.unlockedPlots || 4;
     plotCost = data.plotCost || 100;
+    owned = data.owned || [];
   document.getElementById("upgrade").textContent = "Upgrade click (cost " + upgradeCost + ")"; 
 }
-setInterval(() => { coins += crops + crops2 * 5; update(); save(); }, 1000);
+setInterval(() => { coins += Math.round((crops + crops2 * 5) * getBonus()); update();
+save(); }, 1000);
+buildShop();
 load();
 update();
