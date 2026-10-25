@@ -14,6 +14,14 @@ const decorItems = [
   { emoji: "🏰", name: "Castle", cost: 6000, bonus: 0.50 }
 ];
 let owned = [];
+let season = 1;
+let goldenSeeds = 0;
+const seasons = [
+  { name: "Spring", a: "#bfe3ff", b: "#cfe8b0", c: "#8fcf6a" },
+  { name: "Summer", a: "#fff3b0", b: "#ffd98a", c: "f5a65b" },
+  { name: "Autumn", a: "#f9d5a7", b: "#e8a15a", c: "#b5651d" },
+  { name: "Winter", a: "#e8f4ff", b: "#cfe3f5", b: "#ffffff" }
+];
 function update() {
   document.getElementById("coins").textContent = coins;
   document.getElementById("crops").textContent = crops;
@@ -27,6 +35,7 @@ function update() {
   pb.disabled = coins < plotCost || unlockedPlots >= TOTAL_PLOTS; 
   drawDecor();
   drawPlots();
+  drawSeason();
   save();
 }
 function drawPlots() {
@@ -87,6 +96,15 @@ function drawDecor() {
   document.getElementById("rank").textContent = getRank();
   document.getElementById("bonus").textContent = Math.round((getBonus() - 1) * 100);
   }
+function drawSeason() {
+  const s = seasons[(season - 1) % 4];
+  document.body.style.backgroud = "linear-gradient(" + s.a + " 60%, " + s.c + ")";
+  document.getElementById("seasoninfo").textContent = 
+   s.name + " (Season " + season + ") | Golden Seeds: " + goldenSeeds + " (+" + goldenSeeds * 25 + "% income)";
+  const btn = document.getElementById("newseason");
+  btn.textContent = "🌱 Start Season " + (season + 1) + " (+1 Golden Seed)";
+  btn.disabled = owned.lenth <decorItems.length;
+}
 
 document.getElementById("farm").onclick = () => { coins += clickPower; update(); };
 
@@ -114,7 +132,7 @@ document.getElementById("plotbtn").onclick = () => {
   }
 }
 function save() {
-  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost,owned };
+  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost, owned, season, goldenSeeds };
   localStorage.setItem("farmSave", JSON.stringify(data));
 }
 
@@ -130,10 +148,28 @@ function load() {
   unlockedPlots = data.unlockedPlots || 4;
     plotCost = data.plotCost || 100;
     owned = data.owned || [];
+    season = data.season || 1;
+    goldenSeeds = Math.max(0, season - 1);
   document.getElementById("upgrade").textContent = "Upgrade click (cost " + upgradeCost + ")"; 
 }
-setInterval(() => { coins += Math.round((crops + crops2 * 5) * getBonus()); update();
-save(); }, 1000);
+document.getElementById("newseason").onclick = () => {
+  if (owned.length < decorItems.length) return;
+  if (!confirm("Start a new season? You keep your Golden Seeds, but everything else resets.")) return;
+  goldenSeeds++;
+  season++;
+  coins = 0;
+  crops = 0;
+  crops2 = 0;
+  clickPower = 1;
+  upgradeCost = 25;
+  unlockedPlots = 4;
+  plotCost = 100;
+  owned = [];
+  document.getElementById("upgrade").textContent = "Upgrade click (cost " + upgradeCost + ")";
+  update();
+};
+
+setInterval(() => { coins += Math.round((crops + crops2 * 5) * getBonus() * (1 + goldenSeeds * 0.25)); update(); }, 1000);
 buildShop();
 load();
-update();
+update(); 
