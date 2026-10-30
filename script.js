@@ -18,9 +18,9 @@ let season = 1;
 let goldenSeeds = 0;
 const seasons = [
   { name: "Spring", a: "#bfe3ff", b: "#cfe8b0", c: "#8fcf6a" },
-  { name: "Summer", a: "#fff3b0", b: "#ffd98a", c: "f5a65b" },
+  { name: "Summer", a: "#fff3b0", b: "#ffd98a", c: "#f5a65b" },
   { name: "Autumn", a: "#f9d5a7", b: "#e8a15a", c: "#b5651d" },
-  { name: "Winter", a: "#e8f4ff", b: "#cfe3f5", b: "#ffffff" }
+  { name: "Winter", a: "#e8f4ff", b: "#cfe3f5", c: "#ffffff" }
 ];
 function update() {
   document.getElementById("coins").textContent = coins;
@@ -65,7 +65,7 @@ function getBonus() {
 function getRank() {
   if (owned.length >= 5) return "Dream Island";
   if (owned.length >=3) return "lively Island";
-  if (owned.lenth >= 1) return "Cozy Island";
+  if (owned.length >= 1) return "Cozy Island";
   return "Bare Patch"
 }
 
@@ -98,12 +98,12 @@ function drawDecor() {
   }
 function drawSeason() {
   const s = seasons[(season - 1) % 4];
-  document.body.style.backgroud = "linear-gradient(" + s.a + " 60%, " + s.c + ")";
+  document.body.style.background = "linear-gradient(" + s.a + ", " + s.b + " 60%, " + s.c + ")";
   document.getElementById("seasoninfo").textContent = 
    s.name + " (Season " + season + ") | Golden Seeds: " + goldenSeeds + " (+" + goldenSeeds * 25 + "% income)";
   const btn = document.getElementById("newseason");
   btn.textContent = "🌱 Start Season " + (season + 1) + " (+1 Golden Seed)";
-  btn.disabled = owned.lenth <decorItems.length;
+  btn.disabled = owned.length <decorItems.length;
 }
 
 document.getElementById("farm").onclick = () => { coins += clickPower; update(); };

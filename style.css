@@ -38,7 +38,7 @@ button:disabled { opacity: 0.5; cursor : not-allowed; }
 #buy { background: #f08a24; font-size: 26px; padding: 18px 40px; }
 #buy2 { background: #e53935; }
 #upgrade { background: #3f7fd9; }
-.stat { margin: 0; font-size: 20p; background: rgba(255,255,255,0.6); padding: 6px 18px; border-radius: 10px; }
+.stat { margin: 0; font-size: 20px; background: rgba(255,255,255,0.6); padding: 6px 18px; border-radius: 10px; }
 
 #island {
   width: 380px;
