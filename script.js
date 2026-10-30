@@ -56,6 +56,7 @@ function drawPlots() {
   }
 
 }
+
 function getBonus() {
   let total = 1;
   owned.forEach(i => { total += decorItems[i].bonus; });
@@ -173,3 +174,34 @@ setInterval(() => { coins += Math.round((crops + crops2 * 5) * getBonus() * (1 +
 buildShop();
 load();
 update(); 
+
+let toastTimer;
+function showToast(text) {
+  const t = document.getElementById("toast");
+  t.textContent = text;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+function spawnGolden() {
+  const g = document.getElementById("golden");
+  g.style.left = Math.floor(Math.random() * (window.innerWidth - 260)) + "px";
+  g.style.top = Math.floor(Math.random() * (window.innerHeight - 120)) + "px";
+  g.style.display = "block";
+  setTimeout(() => {g.style.display = "none"; }, 6000);
+}
+
+function scheduleGolden() {
+  const wait = 60000 + Math.random() * 60000;
+  setTimeout(() => { spawnGolden(); scheduleGolden(); }, wait);
+}
+
+document.getElementById("golden").onclick = () => {
+  const bonus = Math.max(100, (crops + crops2 * 5) * 30);
+  coins += bonus;
+  document.getElementById("golden").style.display = "none";
+  showToast("⭐ Lucky! +" + bonus + " coins");
+  update();
+};
+scheduleGolden();
