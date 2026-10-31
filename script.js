@@ -16,6 +16,7 @@ const decorItems = [
 let owned = [];
 let season = 1;
 let goldenSeeds = 0;
+let goldenClicks = 0;
 const seasons = [
   { name: "Spring", a: "#bfe3ff", b: "#cfe8b0", c: "#8fcf6a" },
   { name: "Summer", a: "#fff3b0", b: "#ffd98a", c: "#f5a65b" },
@@ -184,6 +185,14 @@ function showToast(text) {
   toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
 }
 
+function showBonus(amount) {
+  const pop = document.getElementById("bonuspop");
+  pop.textContent = "⭐ +" + amount.toLocaleString();
+  pop.classList.remove("show");
+  void pop.offsetWidth;
+  pop.classList.add("show");
+}
+
 function spawnGolden() {
   const g = document.getElementById("golden");
   g.style.left = Math.floor(Math.random() * (window.innerWidth - 260)) + "px";
@@ -200,8 +209,9 @@ function scheduleGolden() {
 document.getElementById("golden").onclick = () => {
   const bonus = Math.max(100, (crops + crops2 * 5) * 30);
   coins += bonus;
+  goldenClicks++;
   document.getElementById("golden").style.display = "none";
-  showToast("⭐ Lucky! +" + bonus + " coins");
+  showBonus(bonus);
   update();
 };
 scheduleGolden();
