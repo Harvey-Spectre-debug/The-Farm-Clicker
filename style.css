@@ -146,4 +146,5 @@ h2 { position: relative; }
   80% { opacity: 1; transform: translateY(-80%) scale(1); }
   100% { opacity: 0; transform: translateY(-110%) scale(1); }
 }
+#reset { background: #b71c1c; font-size: 14px; padding: 8px 14px; }
 

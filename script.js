@@ -1,3 +1,4 @@
+let resetting = false
 let badges = [];
 const achievements = [
   { icon: "🥕", name: "First crop", test: () => crops + crops2 >= 1 },
@@ -146,6 +147,7 @@ document.getElementById("plotbtn").onclick = () => {
   }
 }
 function save() {
+  if (resetting) return;
   const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost, owned, season, goldenSeeds, badges, goldenClicks };
   localStorage.setItem("farmSave", JSON.stringify(data));
 }
@@ -241,3 +243,11 @@ document.getElementById("golden").onclick = () => {
   update();
 };
 scheduleGolden();
+
+document.getElementById("reset").onclick = () => {
+  if (confirm("Reset EVERYTHING? Coins, plots, decorations, seasons and Golden Seeds will be erased.")) {
+    resetting = true;
+    localStorage.removeItem("farmSave");
+    location.reload();
+  }
+};   
