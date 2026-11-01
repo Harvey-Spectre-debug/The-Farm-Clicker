@@ -1,3 +1,14 @@
+let badges = [];
+const achievements = [
+  { icon: "🥕", name: "First crop", test: () => crops + crops2 >= 1 },
+  { icon: "🍅", name: "Tomatofarner", test: () => crops2 >= 1 },
+  { icon: "🗺️", name: "Whole island unlocked", test: () => unlockedPlots >= TOTAL_PLOTS },
+  { icon: "💰", name: "1,000 coins", test: () => coins >= 1000 },
+  { icon: "🏡", name: "Decorator", test: () => owned.length >= 1 },
+  { icon: "👑", name: "Dream island", test: () => owned.length >= decorItems.length },
+  { icon: "🌱", name: "New season", test: () => season >= 2 },
+  { icon: "⭐", name: "Lucky catch m   ", test: () => goldenClicks >= 1 }
+];  
 let coins = 0;
 let crops = 0;
 let crops2 = 0;
@@ -37,6 +48,7 @@ function update() {
   drawDecor();
   drawPlots();
   drawSeason();
+  checkAchievements();
   save();
 }
 function drawPlots() {
@@ -134,7 +146,7 @@ document.getElementById("plotbtn").onclick = () => {
   }
 }
 function save() {
-  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost, owned, season, goldenSeeds };
+  const data = { coins, crops, crops2, clickPower, upgradeCost, unlockedPlots, plotCost, owned, season, goldenSeeds, badges, goldenClicks };
   localStorage.setItem("farmSave", JSON.stringify(data));
 }
 
@@ -152,6 +164,8 @@ function load() {
     owned = data.owned || [];
     season = data.season || 1;
     goldenSeeds = Math.max(0, season - 1);
+    badges = Array.isArray(data.badges) ? data.badges : [];
+    goldenClicks = data.goldenClicks || 0;
   document.getElementById("upgrade").textContent = "Upgrade click (cost " + upgradeCost + ")"; 
 }
 document.getElementById("newseason").onclick = () => {
@@ -165,7 +179,7 @@ document.getElementById("newseason").onclick = () => {
   clickPower = 1;
   upgradeCost = 25;
   unlockedPlots = 4;
-  plotCost = 100;
+  plotCost = 100; 
   owned = [];
   document.getElementById("upgrade").textContent = "Upgrade click (cost " + upgradeCost + ")";
   update();
@@ -176,7 +190,7 @@ buildShop();
 load();
 update(); 
 
-let toastTimer;
+var toastTimer;
 function showToast(text) {
   const t = document.getElementById("toast");
   t.textContent = text;
@@ -204,6 +218,18 @@ function spawnGolden() {
 function scheduleGolden() {
   const wait = 60000 + Math.random() * 60000;
   setTimeout(() => { spawnGolden(); scheduleGolden(); }, wait);
+}
+
+function checkAchievements() {
+  achievements.forEach((a, i) => {
+    if (!badges.includes(i) && a.test()) {
+      badges.push(i);
+      showToast(a.icon + " Achievement: " + a.name);
+    }
+  });
+  document.getElementById("badgeinfo").textContent =
+  "Achievements: " + badges.length + " / " + achievements.length + " " +
+  badges.map(i => achievements[i].icon).join(" ");
 }
 
 document.getElementById("golden").onclick = () => {
