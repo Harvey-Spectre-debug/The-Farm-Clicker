@@ -1,8 +1,8 @@
 let resetting = false
 let badges = [];
 const achievements = [
-  { icon: "🥕", name: "First crop", test: () => crops + crops2 >= 1 },
-  { icon: "🍅", name: "Tomatofarner", test: () => crops2 >= 1 },
+  { icon: "🥕", name: "First crop", test: () => typeof farmPlots !== "undefined" && farmPlots.some(p => p) },
+  { icon: "🍅", name: "Tomato farmer", test: () => typeof farmPlots !== "undefined" && farmPlots.some(p => p && p.type === "tomato") },
   { icon: "🗺️", name: "Whole island unlocked", test: () => unlockedPlots >= TOTAL_PLOTS },
   { icon: "💰", name: "1,000 coins", test: () => coins >= 1000 },
   { icon: "🏡", name: "Decorator", test: () => owned.length >= 1 },
@@ -79,7 +79,7 @@ function getBonus() {
 
 function getRank() {
   if (owned.length >= 5) return "Dream Island";
-  if (owned.length >=3) return "lively Island";
+  if (owned.length >=3) return "Lively Island";
   if (owned.length >= 1) return "Cozy Island";
   return "Bare Patch"
 }
@@ -174,6 +174,7 @@ document.getElementById("newseason").onclick = () => {
   if (owned.length < decorItems.length) return;
   if (!confirm("Start a new season? You keep your Golden Seeds, but everything else resets.")) return;
   goldenSeeds++;
+  resetFarm();
   season++;
   coins = 0;
   crops = 0;
@@ -235,7 +236,7 @@ function checkAchievements() {
 }
 
 document.getElementById("golden").onclick = () => {
-  const bonus = Math.max(100, (crops + crops2 * 5) * 30);
+  const bonus = Math.max(100, Math.round (coins * 0.05));
   coins += bonus;
   goldenClicks++;
   document.getElementById("golden").style.display = "none";
@@ -248,6 +249,7 @@ document.getElementById("reset").onclick = () => {
   if (confirm("Reset EVERYTHING? Coins, plots, decorations, seasons and Golden Seeds will be erased.")) {
     resetting = true;
     localStorage.removeItem("farmSave");
+    localStorage.removeItem("farmPlots");
     location.reload();
   }
 };   

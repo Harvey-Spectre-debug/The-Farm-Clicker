@@ -132,7 +132,7 @@ h2 { position: relative; }
   font-size: 22px;
   font-weight: bold;
   color: #b8860b;
-  background: #fff8dc;;
+  background: #fff8dc;
   border: 3px solid gold;
   border-radius: 14px;
   padding: 6px 14px;
@@ -147,4 +147,11 @@ h2 { position: relative; }
   100% { opacity: 0; transform: translateY(-110%) scale(1); }
 }
 #reset { background: #b71c1c; font-size: 14px; padding: 8px 14px; }
-
+.plot { position: relative; cursor: pointer; user-select: none; }
+.plot .tag { position: absolute; bottom: 3px; right: 6px; font-size: 12px; color: #fff; text-shadow: 0 1px 2px #000; }
+.plot.locked { cursor: not-allowed; }
+.plot.watered { border-color: #4fc3f7; }
+.plot.ripe { box-shadow: 0 0 14px 4px gold; animation: ripe 0.8s ease-in-out infinite alternate; }
+@keyframes ripe { from { transform: scale(1); } to { transform: scale(1.07); } }
+button.selected { outline: 4px solid #fff59d; }
+#sell { background: #f9a825; }
